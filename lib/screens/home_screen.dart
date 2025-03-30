@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
-import '../widgets/search_bar.dart';
-import '../widgets/user_list.dart';
-import '../widgets/floating_button.dart';
 import '../models/user.dart';
 import '../services/user_service.dart';
+import '../widgets/user_list.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -19,42 +17,29 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    loadUsers();
+    loadNearbyUsers();
   }
 
-  Future<void> loadUsers() async {
+  Future<void> loadNearbyUsers() async {
     try {
-      List<User> fetchedUsers = await UserService.fetchUsers();
+      List<User> fetchedUsers = await UserService.fetchNearbyUsers();
       setState(() {
         users = fetchedUsers;
       });
     } catch (e) {
-      print('Erro ao carregar usuários: $e');
+      print('Erro ao carregar usuários próximos: $e');
     }
-  }
-
-  void onSearch(String query) {
-    setState(() {
-      searchQuery = query;
-    });
-  }
-
-  void onLeftIconPressed() {
-    print('Ícone à esquerda clicado!');
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: onLeftIconPressed,
-        ),
-        title: SearchBarWidget(onSearch: onSearch),
-      ),
+      appBar: AppBar(title: const Text("Usuários Próximos")),
       body: UserList(users: users, searchQuery: searchQuery),
-      floatingActionButton: const FloatingButtonWidget(),
+      floatingActionButton: FloatingActionButton(
+        onPressed: loadNearbyUsers,
+        child: const Icon(Icons.refresh),
+      ),
     );
   }
 }

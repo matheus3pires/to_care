@@ -5,7 +5,7 @@ class UserList extends StatelessWidget {
   final List<User> users;
   final String searchQuery;
 
-  const UserList({Key? key, required this.users, required this.searchQuery}) : super(key: key);
+  const UserList({super.key, required this.users, required this.searchQuery});
 
   @override
   Widget build(BuildContext context) {
